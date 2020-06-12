@@ -27,8 +27,6 @@ public class Main {
 
 	public static float[] parseParamFile(String paramsInputFile){
 		String paramsFile = Helper.filetoString(paramsInputFile);
-		// System.out.println(paramsFile);
-		
 		float[] result = new float[4];
 		try{
 			int prev = 0;
@@ -39,13 +37,9 @@ public class Main {
 				result[i] = Float.parseFloat(paramsFile.substring(prev, pos));
 				prev = pos+1;
 			}
-
 		}catch(StringIndexOutOfBoundsException e){
 			System.out.println("Error in parameter file: " + paramsInputFile);
 		}
-
-		System.out.println(Arrays.toString(result));
-
 		return result;
 	}
 }

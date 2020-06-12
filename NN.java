@@ -50,14 +50,14 @@ public class NN {
 			trainAccuracy = testDataSet(validDataSet);
 			// System.out.println("Accuracy of Training set:\t" + trainAccuracy);
 		}
-		System.out.println("Accuracy of Training set:\t" + trainAccuracy);
-		System.out.println("Epochs to converge:\t" + epochs);
+		// System.out.println("Accuracy of Training set:\t" + trainAccuracy);
+		// System.out.println("Epochs to converge:\t" + epochs);
 	}
 
 	public void test(String filename){
 		TrainingData[] dataSet = TrainingData.createDataSetFromFile(filename);	
 		testAccuracy = testDataSet(dataSet);
-		System.out.println("Accuracy of Testing set:\t" + testAccuracy);
+		// System.out.println("Accuracy of Testing set:\t" + testAccuracy);
 	}
 
 	private float testDataSet(TrainingData[] dataSet){
