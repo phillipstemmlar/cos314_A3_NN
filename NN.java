@@ -6,28 +6,34 @@ import java.util.Objects;
  */
 public class NN {
 	Layer[] layers;
-	TrainingData[] dataSet;
 
 	public static final int HIDDEN_LAYERS = 1; 
 	public static final int INPUT_NEURONS = 4; 
 	public static final int OUTPUT_NEURONS = 3; 
 
+	private float trainAccuracy = 0;
+	private float testAccuracy = 0;
+	private int epochs = 0;
+
 
 	public NN(float min, float max){
 		Neuron.setWeightRange(min, max);
-		dataSet = null;
 		layers = new Layer[HIDDEN_LAYERS + 2];
 		layers[0] = null;
 		layers[1] = Layer.createLayer(INPUT_NEURONS, 6);
 		layers[2] = Layer.createLayer(6, OUTPUT_NEURONS);
 	}
 
-	public void train(String filename, int training_cycles, float learning_rate){
-		dataSet = TrainingData.createDataSetFromFile(filename);
+	public void train(String trainFile, String validFile, float accuracy_threshold, float learning_rate){
+		TrainingData[] trainDataSet = TrainingData.createDataSetFromFile(trainFile);
+		TrainingData[] validDataSet = TrainingData.createDataSetFromFile(validFile);
 
-		for(int t = 0; t < training_cycles; ++t){
-			for(int d = 0; d < dataSet.length; ++d){
-				layers[0] = Layer.createInputLayer(dataSet[d].data);
+		epochs = 0;
+
+		while(trainAccuracy < accuracy_threshold){
+			epochs++;
+			for(int d = 0; d < trainDataSet.length; ++d){
+				layers[0] = Layer.createInputLayer(trainDataSet[d].data);
 
 				for(int i = 1; i < layers.length; ++i){
 					for(int j = 0; j < layers[i].neurons.length; ++j){
@@ -39,13 +45,22 @@ public class NN {
 						layers[i].neurons[j].value = MathUtil.Sigmoid(sum);
 					}
 				}
-				backPropagation(learning_rate, dataSet[d]);
+				backPropagation(learning_rate, trainDataSet[d]);
 			}
+			trainAccuracy = testDataSet(validDataSet);
+			// System.out.println("Accuracy of Training set:\t" + trainAccuracy);
 		}
+		System.out.println("Accuracy of Training set:\t" + trainAccuracy);
+		System.out.println("Epochs to converge:\t" + epochs);
 	}
 
 	public void test(String filename){
-		dataSet = TrainingData.createDataSetFromFile(filename);
+		TrainingData[] dataSet = TrainingData.createDataSetFromFile(filename);	
+		testAccuracy = testDataSet(dataSet);
+		System.out.println("Accuracy of Testing set:\t" + testAccuracy);
+	}
+
+	private float testDataSet(TrainingData[] dataSet){
 		int correctCount = 0;
 
 		for(int d = 0; d < dataSet.length; ++d){
@@ -65,14 +80,7 @@ public class NN {
 
 			if(layers[layers.length -1].bestNeuronIndex() == dataS.expectedIndex()) correctCount++;
 		}
-
-		float success_rate = (float)(correctCount) / (float)(dataSet.length);
-
-		System.out.println("Data Tested:\t" + dataSet.length);
-		System.out.println("Tests Correct:\t" + correctCount);
-
-		System.out.println("Success Rate:\t" + success_rate);
-
+		return (float)(correctCount) / (float)(dataSet.length);
 	}
 
 	//============================================================
@@ -126,7 +134,44 @@ public class NN {
 
 	//============================================================
 
-	public void printDataSet(){
+	public String summary(){
+		String sum = "";
+
+		sum +=  WeightMatrixString()+ "\n";
+		sum +=  BiasVectorString() + "\n";
+
+		sum += "Epochs to converge:\t" + epochs +"\n";		
+		sum += "Training Accuracy: \t" + trainAccuracy +"\n";		
+		sum += "Testing Accuracy:  \t" + testAccuracy +"\n";		
+
+		return sum;
+	}
+
+	private String WeightMatrixString(){
+		String sum = "";
+		for(int i = 1; i < layers.length; ++i){
+			sum += "\n----Weight Matrix from layer " + (i-1) + " to layer " + i + "----\n";
+			for(int j = 0; j < layers[i].neurons.length; ++j){
+				for(int k = 0; k < layers[i].neurons[j].weights.length; ++k) sum += layers[i].neurons[j].weights[k] + "\t";
+				sum += "\n";
+			}
+		}
+		return sum;
+	}
+
+	private String BiasVectorString(){
+		String sum = "";
+		for(int i = 1; i < layers.length; ++i){
+			sum += "\n----Bias Vector from layer " + i + "----\n";
+			for(int j = 0; j < layers[i].neurons.length; ++j) sum += layers[i].neurons[j].bias + "\t";	
+			sum += "\n";
+		}
+		return sum;
+	}
+
+	//============================================================
+
+	public void printDataSet(TrainingData[] dataSet){
 		for(int i = 0; dataSet != null && i < dataSet.length; ++i){
 			System.out.println(dataSet[i].toString());
 		}

@@ -10,8 +10,8 @@ BIN=./bin
 JAR_FILE=${PROJECT_NAME}.jar
 MANIFEST_FILE=Manifest.txt
 MANIFEST_CONTENT="Main-Class: ${MAIN}"
-INPUT_FILE=params.txt iris.data iris.test.data
-OUTPUT_FILE=*_output.txt Manifest.txt
+INPUT_FILE=params.txt iris.data iris.valid.data iris.test.data
+OUTPUT_FILE=output.txt Manifest.txt
 m=Automated commit with MakeFile
 
 make: *.java
