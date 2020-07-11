@@ -3,7 +3,7 @@
 This repository contains a Neural Network written in JAVA, that takes properties of Iris flowers as input and the correctly detemines the type of Iris flower.
 The Neural Network is trained on a training data set and simultaniously validated with a validation data set, and can the nbe tested with a test data set.
 
-==================================JAR FILE==========================================
+==================================JAR FILE==========================================<br/>
 To compile the code into a JAR file, use
 
 	make jar
@@ -14,7 +14,7 @@ To run the JAR file, called COS314_A3_u18171185.jar, use
 
 	java -jar COS314_A3_u18171185.jar <params file> <training data file> <validation data file> <test data file>
 
-===================================PARAMETER FILE FORMAT=============================
+===================================PARAMETER FILE FORMAT=============================<br/>
 
 Given filename: params.txt
 Content:
@@ -31,7 +31,7 @@ The 4th value (0.96)  specifies the accuracy threshold - minimum acceptable accu
 
 *Each value has to be on a new line with no empty lines in between.
 
-===================================DEVELOPMENT ENVIRONMENT===========================
+===================================DEVELOPMENT ENVIRONMENT===========================<br/>
 
 openjdk 11.0.7 2020-04-14
 OpenJDK Runtime Environment (build 11.0.7+10-post-Ubuntu-2ubuntu218.04)
